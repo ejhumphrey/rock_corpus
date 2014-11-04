@@ -11,5 +11,15 @@ Other Perl scripts were used to extract aggregate statistics about from one or
 more harmonic analyses or melodic transcriptions. These programs were used to
 generate the statistics presented in our 2011 Popular Music paper:
 
-    http://theory.esm.rochester.edu/rock_corpus/2011_paper.html
+http://theory.esm.rochester.edu/rock_corpus/2011_paper.html
 
+Notes
+=====
+expand6.c
+
+The program is in C and requires a C compiler. Compile the program like this 
+(in a Unix window, e.g. the Mac "terminal" window):
+
+```
+$ cc src/expand6.c -o bin/expand6
+```
