@@ -17,9 +17,9 @@ Notes
 =====
 expand6.c
 
-The program is in C and requires a C compiler. Compile the program like this 
+The program is in C and requires a C compiler. Compile the program like this
 (in a Unix window, e.g. the Mac "terminal" window):
 
 ```
-$ cc src/expand6.c -o bin/expand6
+$ mkdir bin; cc src/expand6.c -o bin/expand6
 ```

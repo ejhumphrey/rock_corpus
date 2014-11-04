@@ -1,5 +1,5 @@
 
-/* 
+/*
 
 This program takes a reduced harmonic analysis of a song, in which
 repeated sections are represented with single symbols, and expands it
@@ -20,8 +20,8 @@ int numwords;
 
 /* Rewrite rules */
 struct citem {
-    char parent[10];     
-    char child[MAX_CHILDREN][10]; 
+    char parent[10];
+    char child[MAX_CHILDREN][10];
     int num_children;
     int current;           /* 1 if this symbol is currently being expanded, 0 otherwise */
     int used;              /* 1 if this symbol occurs in an expansion, 0 otherwise */
@@ -59,7 +59,7 @@ struct {
     int pos;         /* Position in measure (first chord has position 0) */
     int measure;
     double start;      /* Timepoint at which chord starts in relation to measures, e.g. downbeat of m. 3 is 2.0 */
-    double end;      
+    double end;
 } chord[1000];
 
 struct {
@@ -86,7 +86,7 @@ read_analysis() {
 
     root = NULL;
 
-    while (fgets(line, sizeof(line), song_file) !=NULL) {            
+    while (fgets(line, sizeof(line), song_file) !=NULL) {
 	for(i=0; i<MAX_ELEMENTS; i++) {
 	    for(j=0; j<10; j++) inword[i][j]='\0';
 	    isnumber[i] = 0;
@@ -112,7 +112,7 @@ read_analysis() {
 	    while(*s == ' ') s++;
 	    if (*s == '\0' || *s == '\n' || *s == '%') break;
 	    t = s;
-	    while(*t != '\0' && *t != ' ' && *t != '\n' && *t != '*' && *t != '%' && *t != ':') t++;      
+	    while(*t != '\0' && *t != ' ' && *t != '\n' && *t != '*' && *t != '%' && *t != ':') t++;
 	    if(*t==':') {
 		if(w!=-1 || *(t+1)!=' ') {
 		    printf("Error: Colon may only be used after parent word\n");
@@ -133,11 +133,11 @@ read_analysis() {
 		    printf("Error: Asterisk may not be used on left-hand side of rule\n");
 		    exit(1);
 		}
-		if(t==s) {     
+		if(t==s) {
 		    printf("Error: Asterisk must be preceded by string\n");
 		    exit(1);
 		}
-		if(*s!='$' && *s!='|') {     
+		if(*s!='$' && *s!='|') {
 		    printf("Error: Asterisk must be preceded by nonterminal\n");
 		    exit(1);
 		}
@@ -164,7 +164,7 @@ read_analysis() {
 	if(w<1) {
 	    printf("Error: Parent '%s' has no children\n", pword);
 	    exit(1);
-	}  
+	}
 
 	num_elements = w;
 
@@ -249,21 +249,21 @@ read_analysis() {
 		    printf("Error: Children of '%s' exceed maximum (%d)\n", tmp->parent, MAX_CHILDREN);
 		    exit(1);
 		}
-		strcpy(tmp->child[w2], inword[w]);    
+		strcpy(tmp->child[w2], inword[w]);
 		w2++;
 	    }
 	    else {
-		sscanf(inword[w+1], "%d", &num_occ);		
+		sscanf(inword[w+1], "%d", &num_occ);
 		for(i=0; i<num_occ; i++, w2++) {
 		    if(w2==MAX_CHILDREN) {
 			printf("Error: Children of '%s' exceed maximum (%d)\n", tmp->parent, MAX_CHILDREN);
 			exit(1);
 		    }
 		    strcpy(tmp->child[w2], inword[w]);
-		}		    
+		}
 		w++;
 	    }
-	} 
+	}
 
 	tmp->num_children = w2;
 
@@ -294,11 +294,11 @@ read_analysis() {
 		}
 		prev_child = 2;
 	    }
-	}		    
+	}
 
 	tmp->next = NULL;
 	if(root != NULL) tmp->next = root;
-	root = tmp;	
+	root = tmp;
 
 	/* Make sure it hasn't already been defined */
 	tmp = root;
@@ -318,11 +318,11 @@ output_all_rules() {
     int i, c2;
     struct citem * tmp;
 
-    tmp = root;	
+    tmp = root;
     printf("\nRULES:\n");
     while(1) {
 	if(tmp == NULL) break;
-	
+
 	printf("%s: ", tmp->parent);
 	printf("(%d) ", tmp->num_children);
 	for(c2=0; c2<tmp->num_children; c2++) {
@@ -332,7 +332,7 @@ output_all_rules() {
 	tmp = tmp->next;
     }
     printf("\n");
-}				
+}
 
 read_key_or_timesig(char * s) {
 
@@ -382,7 +382,7 @@ read_key_or_timesig(char * s) {
 
     else bad_ts = 1;
     if(bad_ts == 0) {
-	
+
 	//printf("The char is %c\n", *s3);
 	strncpy(tsstring, s3, len);
 	tsstring[len] = '\0';
@@ -391,7 +391,7 @@ read_key_or_timesig(char * s) {
 	timesig = 100 * ti;
 	//printf("Now timesig is %d\n", timesig);
 	s3 += (len+1);
-	
+
 	if(*(s3+1) == '\0') len = 1;
 	else if(*(s3+2) == '\0') len = 2;
 	else bad_ts = 1;
@@ -405,7 +405,7 @@ read_key_or_timesig(char * s) {
 
     // Check for timesigs with bad nums or denoms?
     //printf("timesig = %d\n", timesig);
-    
+
     if(bad_ts == 0) return 2;
 
     else {
@@ -427,7 +427,7 @@ expand(char * parent) {
 
     if(parent[0] == '[') {
 	raw_prog[r].type = read_key_or_timesig(parent);    /* x=2 if it's a timesig, x=3 if it's a keysig */
-	if(raw_prog[r].type==2) {   
+	if(raw_prog[r].type==2) {
 	    /* We've found a time signature. Work backwards from it until you hit a barline. If you hit a chord symbol
 	       first, it's an error. */
 	    for(r2=r-1; r2 >= 0; r2--) {
@@ -438,7 +438,7 @@ expand(char * parent) {
 	    }
 	}
 	r++;
-	return;
+	return 0;
     }
     else if(parent[0] == '$') {
 	nonterminal = 1;
@@ -483,8 +483,8 @@ expand(char * parent) {
 			key = local_key;
 			raw_prog[r].type = 3;
 			raw_prog[r].key = key;
-			r++; 
-		    } 
+			r++;
+		    }
 		}
 	    }
 	    ci->current = 0;
@@ -595,14 +595,14 @@ create_chords_and_measures() {
     current_timesig = raw_prog[0].timesig;
 
     for(r=0; r<num_raw_prog_elements; r++) {
-	if(raw_prog[r].type == 0) {         
+	if(raw_prog[r].type == 0) {
 	    if(m>-1) {
 		measure[m].num_chords = n;
 		measure[m].num_units = p;
 		measure[m].timesig = current_timesig;    /* Assign the just-ended measure the timesig of the PREVIOUS barline */
 		current_timesig = raw_prog[r].timesig;
 	    }
-	    m++;		
+	    m++;
 	    n=p=0;
 	}
 	else if(raw_prog[r].type == 1) {                /* It's a chord */
@@ -660,7 +660,7 @@ create_chords_and_measures() {
 	for(c=0; c<num_chords; c++) {
 	    printf("%s (%5.3f) ", chord[c].string, chord[c].start);
 	}
-	printf("\n\n"); 
+	printf("\n\n");
     }
 
     if(verbosity == -1) {
@@ -752,7 +752,7 @@ assign_roots() {
 	    chord[c].sectonic = romnum(s);
 	}
 
-	chord[c].croot = (chord[c].lroot + chord[c].sectonic) % 12; 
+	chord[c].croot = (chord[c].lroot + chord[c].sectonic) % 12;
 	chord[c].droot = chr_to_dia(chord[c].croot);
 	chord[c].aroot = (chord[c].croot + chord[c].key) % 12;
 
@@ -774,7 +774,7 @@ main(int argc, char * argv[]) {
 	    a++;
 	}
 	else {
-	    song_file = fopen(argv[a], "r"); 
+	    song_file = fopen(argv[a], "r");
 	    if(song_file == NULL) {
 		printf("Input file '%s' not found\n", argv[a]);
 		exit(1);
@@ -833,8 +833,8 @@ main(int argc, char * argv[]) {
     while(c<(num_chords-1)) {
 	/* Set the end time for each chord c to the start time of chord c2=c+1 */
 
-	c2 = c+1; 
-	/* If c2 has the same root and key as c, then c2 is not a NEW chord and no chord statement will be printed for it. 
+	c2 = c+1;
+	/* If c2 has the same root and key as c, then c2 is not a NEW chord and no chord statement will be printed for it.
 	   Increment c2 until you get a new chord; if c2 is the last chord, stop */
 	while(c2<num_chords && chord[c2].croot == chord[c].croot && chord[c2].key == chord[c].key) {
 	    c2++;
@@ -854,7 +854,7 @@ main(int argc, char * argv[]) {
     if(verbosity == 0 || verbosity > 1) {
 	for(c=0; c<num_chords; c++) {
 	    if(c > 0) if(chord[c].croot == chord[c-1].croot && chord[c].key == chord[c-1].key) continue;
-	    /* ^ This might occur if one chord c is an applied chord, or if they're different inversions. In this case, chord c has already 
+	    /* ^ This might occur if one chord c is an applied chord, or if they're different inversions. In this case, chord c has already
 	       been subsumed by the previous chord (the previous chord's end time has been set to c's end time ) */
 	    printf("%5.2f %5.2f %5s %3d %3d %3d %3d\n", chord[c].start, chord[c].end, chord[c].string, chord[c].croot, chord[c].droot, chord[c].key, chord[c].aroot);
 	}
