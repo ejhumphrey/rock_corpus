@@ -11,7 +11,7 @@ Other Perl scripts were used to extract aggregate statistics about from one or
 more harmonic analyses or melodic transcriptions. These programs were used to
 generate the statistics presented in our 2011 Popular Music paper:
 
-http://theory.esm.rochester.edu/rock_corpus/2011_paper.html
+http://rockcorpus.midside.com/2011_paper.html
 
 Notes
 =====
